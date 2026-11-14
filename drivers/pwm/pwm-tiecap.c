@@ -73,8 +73,6 @@ static int ecap_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 		duty_cycles = (u32)c;
 	}
 
-	pm_runtime_get_sync(pwmchip_parent(chip));
-
 	value = readw(pc->mmio_base + ECCTL2);
 
 	/* Configure APWM mode & disable sync option */
@@ -103,8 +101,6 @@ static int ecap_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 		writew(value, pc->mmio_base + ECCTL2);
 	}
 
-	pm_runtime_put_sync(pwmchip_parent(chip));
-
 	return 0;
 }
 
@@ -113,8 +109,6 @@ static int ecap_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
 {
 	struct ecap_pwm_chip *pc = to_ecap_pwm_chip(chip);
 	u16 value;
-
-	pm_runtime_get_sync(pwmchip_parent(chip));
 
 	value = readw(pc->mmio_base + ECCTL2);
 
@@ -126,8 +120,6 @@ static int ecap_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
 		value &= ~ECCTL2_APWM_POL_LOW;
 
 	writew(value, pc->mmio_base + ECCTL2);
-
-	pm_runtime_put_sync(pwmchip_parent(chip));
 
 	return 0;
 }
@@ -173,6 +165,8 @@ static int ecap_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 {
 	int err;
 	int enabled = pwm->state.enabled;
+
+	guard(pm_runtime_active)(pwmchip_parent(chip));
 
 	if (state->polarity != pwm->state.polarity) {
 
