@@ -695,6 +695,7 @@ static int wkup_m3_ipc_probe(struct platform_device *pdev)
 		goto err_put_rproc;
 	}
 
+	platform_set_drvdata(pdev, m3_ipc);
 	wkup_m3_ipc_dbg_init(m3_ipc);
 
 	return 0;
@@ -708,12 +709,14 @@ err_free_mbox:
 
 static void wkup_m3_ipc_remove(struct platform_device *pdev)
 {
-	wkup_m3_ipc_dbg_destroy(m3_ipc_state);
+	struct wkup_m3_ipc *m3_ipc = platform_get_drvdata(pdev);
 
-	mbox_free_channel(m3_ipc_state->mbox);
+	wkup_m3_ipc_dbg_destroy(m3_ipc);
 
-	rproc_shutdown(m3_ipc_state->rproc);
-	rproc_put(m3_ipc_state->rproc);
+	mbox_free_channel(m3_ipc->mbox);
+
+	rproc_shutdown(m3_ipc->rproc);
+	rproc_put(m3_ipc->rproc);
 
 	m3_ipc_state = NULL;
 }
