@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: GPL-2.0
+#
+# Lab 01 task T7: copy this directory to drivers/misc/lfd430/ in your
+# kernel tree together with lfd_core_main.c, lfd_core_debugfs.c, lfd_core.h
+# and lfd_sensor.h, then hook it into drivers/misc/Kconfig and Makefile.
+#
+# TODO T7: Write a tristate option LFD430_CORE ("LFD430 sensor registry"),
+#   default n, that depends on DEBUG_FS, with a help text of 2-3 lines.
+#   Then add a second tristate LFD430_DUMMY that depends on LFD430_CORE.
+#   Deck 00, slide 36 (Kconfig) and Documentation/kbuild/kconfig-language.rst
+
+config LFD430_CORE
+	tristate "LFD430 sensor registry"
+    depends on DEBUG_FS
+    default n
+	help 
+	  LFD430 sensor registry.
+	  Provides a registry for sensors and a debugfs interface
+	  to read their values.     
+
+config LFD430_DUMMY
+	tristate "LFD430 dummy sensors"
+	depends on LFD430_CORE
+	help
+      Registers dummy sensors with the LFD430 core.
+	  Useful for testing the sensor registry without hardware.
