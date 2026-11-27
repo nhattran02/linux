@@ -71,6 +71,11 @@ static int __init lfd_dummy_init(void)
 		return -ENOMEM;
 
 	for (i = 0; i < nr_names; i++) {
+		if (!names[i][0]) {
+			pr_err("sensor %d has an empty name\n", i);
+			ret = -EINVAL;
+			goto err;
+		}
 		dummies[i].sensor.name = names[i];
 		dummies[i].sensor.ops = &dummy_ops;
 		dummies[i].sensor.owner = THIS_MODULE;

@@ -52,7 +52,7 @@ DEFINE_SHOW_ATTRIBUTE(sensors);
 
 int lfd_core_debugfs_init(void)
 {
-	lfd_dir = debugfs_create_dir("kernel_labs", NULL);
+	lfd_dir = debugfs_create_dir("lfd430", NULL);
 	debugfs_create_file("sensors", 0444, lfd_dir, NULL, &sensors_fops);
 	return 0;
 }

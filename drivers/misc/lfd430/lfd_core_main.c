@@ -30,8 +30,8 @@ module_param(max_sensors, uint, 0444); /* read-only */
 MODULE_PARM_DESC(max_sensors, "Maximum number of sensors (default 8)");
 
 bool lfd_core_verbose = false;
-module_param(lfd_core_verbose, bool, 0644); /* writable by root */
-MODULE_PARM_DESC(lfd_core_verbose, "Enable verbose logging (default no)");
+module_param_named(verbose, lfd_core_verbose, bool, 0644); /* writable by root */
+MODULE_PARM_DESC(verbose, "Enable verbose logging (default no)");
 
 DEFINE_MUTEX(lfd_core_lock);
 LIST_HEAD(lfd_core_sensors);
